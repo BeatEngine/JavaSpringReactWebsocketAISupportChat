@@ -1,0 +1,3 @@
+# Test some catalog sql query top 5 ordered useres, which are there. The password is allready in the environemt variable.
+docker exec -it javaspringreactmcpaisupportchat-db-1 psql -c 'SELECT usename AS role_name FROM pg_catalog.pg_user ORDER BY role_name desc limit 5;' -h localhost -p 5432 -U postgres
+docker exec -it javaspringreactmcpaisupportchat-db-1 psql -c 'SELECT datname FROM pg_database WHERE datistemplate = false;' -h localhost -p 5432 -U postgres

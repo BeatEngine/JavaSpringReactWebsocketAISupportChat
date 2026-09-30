@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="AIChatSupportToolingDemo" options="-parameters" />
+      <module name="AIChatSupportToolingDemo.main" options="-parameters" />
+      <module name="AIChatSupportToolingDemo.test" options="-parameters" />
+      <module name="AISupportChatDemo" options="-parameters" />
+    </option>
+  </component>
+</project>

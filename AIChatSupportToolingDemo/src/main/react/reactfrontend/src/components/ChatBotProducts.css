@@ -1,0 +1,18 @@
+.chat-window {
+    min-height: 100px;
+    max-height: 99vh;
+    overflow-y: auto;
+    background-color: #6b6375;
+}
+
+.chat-input-container {
+    min-height: 50px;
+    max-height: 30vh;
+    background-color: #2e303a;
+}
+
+.chat-input {
+    overflow-y: auto;
+    font-size: 14pt;
+    color: #f3f4f6;
+}

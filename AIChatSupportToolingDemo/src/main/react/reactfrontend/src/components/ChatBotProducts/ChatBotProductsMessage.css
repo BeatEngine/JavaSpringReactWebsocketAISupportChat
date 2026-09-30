@@ -1,0 +1,25 @@
+.chat-bot-products-message {
+    border-radius: 10px;
+
+    color: black;
+    font-size: 12pt;
+    margin: 6px;
+    width: 70%;
+    min-height: 50px;
+}
+.chat-bot-products-message:first-of-type {
+    margin-top: 12px;
+}
+.chat-bot-products-message:last-of-type {
+    margin-bottom: 12px;
+}
+
+.chat-bot-products-message-assistant {
+    float: inline-start;
+    background-color: Coral;
+}
+
+.chat-bot-products-message-user {
+    float: inline-end;
+    background-color: DarkKhaki;
+}

@@ -1,0 +1,66 @@
+services:
+  aimodell:
+    image: alpine/ollama # only cpu alpine/ollama (GPU ollama/ollama)
+    restart: always
+    ports:
+      - "11434:11434"
+    env_file: "environmentconfigurations.env"
+    volumes:
+      - ./ollama-httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
+      - ./scriptsetup/wait-for-ollama-serve.sh:/wait-for-ollama-serve.sh:ro
+    post_start:
+      # Pull the AI language model ollama shall use
+      #- command: ["/bin/sh","/wait-for-ollama-serve.sh", "127.0.0.1", "11434"]
+      - command: ["sleep","7"]
+      - command: ["ollama", "pull", "qwen2.5:1.5b"]
+        user: root
+
+# Use postgres/example user/password credentials
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    # Definition of POSTGRES_PASSWORD
+    env_file: "environmentconfigurations.env"
+
+
+    
+    # set shared memory limit when using docker compose
+    shm_size: 128mb
+    # or set shared memory limit when deploy via swarm stack
+    #volumes:
+    #  - type: tmpfs
+    #    target: /dev/shm
+    #    tmpfs:
+    #      size: 134217728 # 128*2^20 bytes = 128Mb
+
+    volumes:
+      - ./scriptsetup/init-preseed-database.sh:/init-preseed-database.sh:ro
+    post_start:
+      # Create the database APPLICATION_DB owner POSTGRES_USER
+      - command: ["sleep","7"]
+      - command: ["/bin/sh","/init-preseed-database.sh"]
+
+  ### The whole application SPA Java Spring MVC + AI tool-calling module and React frontend
+  application:
+    # The application itself loads the environmentconfigurations.env copied into the container at build.
+    restart: always
+    depends_on:
+      - db
+      - aimodell
+    ports:
+      - 8080:8080 #Only as demo without TLS certs.
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+#volumes:
+  #db-data:
+    #driver: flocker
+    #driver_opts:
+      #size: "10GiB"
+
+secrets:
+  server-certificate:
+    external: true

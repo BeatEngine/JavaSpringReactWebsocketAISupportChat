@@ -1,0 +1,12 @@
+Multiple Dockerfiles.db Dockerfile.web … in compose.yaml
+
+version: '3'
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+  database:
+    build:
+      context: .
+      dockerfile: Dockerfile.db
