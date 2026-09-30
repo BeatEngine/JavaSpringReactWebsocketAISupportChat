@@ -1,5 +1,6 @@
 # JavaSpringReactWebsocketAISupportChat
 A demo project showing AI-Toolcalling using Java Spring React and Websocket.
+<img style="display:flex" src="AI-Chat-ws-demo1.png" width="500"></img>
 
 ## Scope and goals of this demo project
 - Everything shall be delivered as a docker compose container
