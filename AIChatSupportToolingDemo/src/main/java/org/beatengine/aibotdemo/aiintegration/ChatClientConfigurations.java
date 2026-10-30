@@ -13,7 +13,13 @@ import org.springframework.ai.ollama.api.OllamaApi;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.netty.http.client.HttpClient;
 
+import java.time.Duration;
 import java.util.Properties;
 
 /**
@@ -47,8 +53,30 @@ public class ChatClientConfigurations {
     public OllamaApi ollamaApi() {
         final String burl = System.getProperty("OLLAMA_URL");
         System.getLogger("Configurations").log(System.Logger.Level.ALL, "OllamaApi baseUrl = " + burl);
+
+        // Synchronous HTTP client set http timeout to 5 minutes
+        final SimpleClientHttpRequestFactory requestFactory =
+                new SimpleClientHttpRequestFactory();
+
+        requestFactory.setConnectTimeout(Duration.ofSeconds(30));
+        requestFactory.setReadTimeout(Duration.ofMinutes(5));
+
+        final RestClient.Builder restClientBuilder = RestClient.builder()
+                .requestFactory(requestFactory);
+
+        // Reactive HTTP client set http timeout to 5 minutes
+        HttpClient httpClient = HttpClient.create()
+                .responseTimeout(Duration.ofMinutes(5));
+
+        WebClient.Builder webClientBuilder = WebClient.builder()
+                .clientConnector(
+                        new ReactorClientHttpConnector(httpClient)
+                );
+
         return OllamaApi.builder()
                 .baseUrl(burl)
+                .restClientBuilder(restClientBuilder)
+                .webClientBuilder(webClientBuilder)
                 .build();
     }
 

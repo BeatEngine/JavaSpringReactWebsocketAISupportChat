@@ -1,5 +1,4 @@
 #!/bin/sh
-set -e
 cd reactfrontend
 npm ci
 npm run build

@@ -1,6 +1,13 @@
 services:
   aimodell:
-    image: alpine/ollama # only cpu alpine/ollama (GPU ollama/ollama)
+    image: ollama/ollama # only cpu alpine/ollama (GPU ollama/ollama)
+    deploy: # When using ollama/ollama for NVIDIA GPU otherwise comment out!
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [ gpu ]
     restart: always
     ports:
       - "11434:11434"
@@ -11,8 +18,8 @@ services:
     post_start:
       # Pull the AI language model ollama shall use
       #- command: ["/bin/sh","/wait-for-ollama-serve.sh", "127.0.0.1", "11434"]
-      - command: ["sleep","7"]
-      - command: ["ollama", "pull", "qwen2.5:1.5b"]
+      - command: ["sleep","9"]
+      - command: ["ollama", "pull", "qwen2.5:3b"]
         user: root
 
 # Use postgres/example user/password credentials
@@ -39,7 +46,7 @@ services:
       - ./scriptsetup/init-preseed-database.sh:/init-preseed-database.sh:ro
     post_start:
       # Create the database APPLICATION_DB owner POSTGRES_USER
-      - command: ["sleep","7"]
+      - command: ["sleep","9"]
       - command: ["/bin/sh","/init-preseed-database.sh"]
 
   ### The whole application SPA Java Spring MVC + AI tool-calling module and React frontend
