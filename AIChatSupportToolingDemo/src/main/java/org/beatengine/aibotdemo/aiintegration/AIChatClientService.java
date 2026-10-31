@@ -87,10 +87,6 @@ public class AIChatClientService {
                     "chatMemory is null");
         }
 
-        assert chatMemory != null;
-        // Set the user input message to the current chat-conversation
-        chatMemory.add(conversationID,new AIChatClientMessage(userInput, MessageType.USER));
-
 
         final MessageChatMemoryAdvisor chatMemoryAdvisor = MessageChatMemoryAdvisor.builder(chatMemory).order(1).build();
 

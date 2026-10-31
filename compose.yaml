@@ -17,8 +17,8 @@ services:
       - ./scriptsetup/wait-for-ollama-serve.sh:/wait-for-ollama-serve.sh:ro
     post_start:
       # Pull the AI language model ollama shall use
-      #- command: ["/bin/sh","/wait-for-ollama-serve.sh", "127.0.0.1", "11434"]
-      - command: ["sleep","9"]
+      - command: ["bash","/wait-for-ollama-serve.sh", "aimodell", "11434"]
+      #- command: ["sleep","9"]
       - command: ["ollama", "pull", "qwen2.5:3b"]
         user: root
 

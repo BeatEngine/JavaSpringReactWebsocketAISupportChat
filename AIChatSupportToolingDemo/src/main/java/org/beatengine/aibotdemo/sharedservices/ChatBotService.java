@@ -41,10 +41,11 @@ public class ChatBotService {
      * @param chatSession The chatSession of the Chat. //todo in a real project this is the userSessionId
      * @return The LLM reply.
      */
-    public synchronized String incomingChatbotMessage(final String message, final String chatSession)
+    public String incomingChatbotMessage(final String message, final String chatSession)
     {
         //System.getLogger(this.getClass().getSimpleName()).log(System.Logger.Level.INFO, "Cookie: " + chatSession);
-        final String s = chatClientService.promptToOllama(message, ChatConversationPrefix+chatSession);
+        final String s;
+            s = chatClientService.promptToOllama(message, ChatConversationPrefix + chatSession);
         System.getLogger(this.getClass().getSimpleName()).log(System.Logger.Level.INFO,
                 s.substring(0, Math.min(50, s.length())));
         return s;
@@ -55,7 +56,7 @@ public class ChatBotService {
      * @param chatSession the chatSession  //todo in a real project this is the userSessionId
      * @return the List of JSONMessages from history (memory).
      */
-    public synchronized List<JSONMessage> queryChatbotMemoryMessages(final String chatSession)
+    public List<JSONMessage> queryChatbotMemoryMessages(final String chatSession)
     {
         final List<JSONMessage> transportMessages = new ArrayList<>();
         final List<Message> messages = chatClientService.queryChatbotMemoryMessages(ChatConversationPrefix+chatSession);
@@ -66,6 +67,12 @@ public class ChatBotService {
                 final String author = message.getMessageType().getValue();
                 final String data = message.getText();
                 //todo final LocalDateTime created = (LocalDateTime) message.getMetadata().get("created"); //implement date for ordering
+                transportMessages.add(new JSONMessage(ChatBotController.API_MESSAGE, JSONMessage.STATE_UPDATE, data, author));
+            }
+            else if(m instanceof UserMessage)
+            {
+                final String author = m.getMessageType().getValue();
+                final String data = m.getText();
                 transportMessages.add(new JSONMessage(ChatBotController.API_MESSAGE, JSONMessage.STATE_UPDATE, data, author));
             }
         }

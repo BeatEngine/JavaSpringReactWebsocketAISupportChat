@@ -1,6 +1,14 @@
-echo "Wait for Ollama $1:$2 serve..."
-until curl -s -o /dev/null -w "%{http_code}" "http://$1:$2" | grep -q "200"; do
- sleep 1
+#!/bin/bash
+HOST=$1
+PORT=$2
+echo "Wait for Ollama $HOST:$PORT serve..."
+until (
+  exec 3<>/dev/tcp/"$HOST"/"$PORT" 2>/dev/null && \
+  printf "GET / HTTP/1.1\r\nHost: %s:%s\r\nConnection: close\r\n\r\n" "$HOST" "$PORT" >&3 && \
+  cat <&3 | grep -q "HTTP/1.1 200 OK"
+); do
+  sleep 1
 done
 echo "Ollama has been served."
-exit
+
+exit 0

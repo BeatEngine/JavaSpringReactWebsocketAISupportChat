@@ -1,15 +1,17 @@
 package org.beatengine.aibotdemo.aiintegration;
 
 import org.jspecify.annotations.Nullable;
+import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.MessageType;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
+import java.util.List;
 import java.util.Map;
 
-public class AIChatClientMessage implements Message {
+public class AIChatClientMessage extends AssistantMessage implements Message {
 
     private LocalDateTime created = LocalDateTime.now();
     private String text = "";
@@ -17,6 +19,7 @@ public class AIChatClientMessage implements Message {
 
     public AIChatClientMessage(final String text, final MessageType type)
     {
+        super(text, Map.of("created", LocalDateTime.now()), List.of(), List.of());
         this.text = text;
         this.type = type;
     }

@@ -22,6 +22,15 @@ class McpSupportDemoApplicationAIIntegrationTests {
 
     //todo In a real project this test would use a test database also for the chatBotMemory when not in-memory memory
 
+    public McpSupportDemoApplicationAIIntegrationTests()
+    {
+        //Use localhost for testing, rest from environmentconfigurations.env of root project
+        McpSupportDemoApplication.loadRootProjectEnvironmentVariables();
+        System.setProperty("APP_POSTGRES_HOST", "localhost");
+        System.setProperty("OLLAMA_URL", "http://localhost:11434");
+
+    }
+
     @Autowired
     AIChatClientService chatClient;
 
